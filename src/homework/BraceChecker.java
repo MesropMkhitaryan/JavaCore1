@@ -8,14 +8,14 @@ public class BraceChecker {
     private final String text;
     int firstBrace;
     int lastBrace;
-    private int[] firstBraceArray;
+
 
     BraceChecker(String text) {
         this.text = text;
     }
 
     void check() {
-        firstBraceArray = new int[text.length()];
+
 
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
