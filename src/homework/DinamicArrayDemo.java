@@ -21,7 +21,7 @@ public class DinamicArrayDemo {
         dinamicArray.printArray();
 
         System.out.println();
-        dinamicArray.delete(7);
+        dinamicArray.delete(1);
         dinamicArray.printArray();
 
 

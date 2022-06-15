@@ -18,9 +18,7 @@ public class DinamicArray {
     //Գրել մեթոդ add(int index, int value) որը տրված վելյուն կդնի տրված ինդեքսի տեղը, իսկ էղած թիվը ու կողքի բոլոր թվերը կտանի աջ, ոչ մի թիվ չի կորի
     //Գրել մեթոդ delete(int index) որ տանք ինդեքսը, այդ ինդեքսի տակ գտնվող թիվը հեռացնի մասիվից. (նոր մասիվ պետք չէ սարքել)
     public boolean isEmpty() {
-        if (array.length <= 0) {
-            return true;
-        } else return false;
+            return array.length <= 0;
     }
 
     public int getByIndex(int index) {
@@ -33,8 +31,7 @@ public class DinamicArray {
                 return i;
             }
         }
-
-        return 0;
+        return -1;
     }
 
     public void set(int index, int value) {
@@ -42,7 +39,6 @@ public class DinamicArray {
         for (int i = 0; i < array.length; i++) {
             System.out.print(array[i] + " ");
         }
-
     }
    void add(int index, int value){
         if (size == array.length){
@@ -57,11 +53,13 @@ public class DinamicArray {
 
 
     void delete(int index) {
+        if (index >= 0 || index < size) {
 
-            for (int i = index; i < size-1; i++) {
+            for (int i = index; i < size - 1; i++) {
                 array[i] = array[i + 1];
             }
             size--;
+        }
     }
 
 
