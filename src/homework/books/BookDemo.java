@@ -66,7 +66,6 @@ public class BookDemo implements Commands {
         System.out.println("please input author gender");
         String gender = scanner.nextLine();
         if (gender.equals("male") || gender.equals("female")){
-            gender.equals(gender);
             Author author = new Author(name,surname,email,gender);
             authorStorage.add(author);
         }
