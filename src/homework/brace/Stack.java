@@ -1,4 +1,4 @@
-package homework;
+package homework.brace;
 
 public class Stack {
     int stck[] = new int[20];

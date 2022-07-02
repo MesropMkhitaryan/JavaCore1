@@ -1,7 +1,8 @@
-package homework.books;
+package homework.books.storage;
 
 
-import homework.students.Student;
+import homework.books.model.Author;
+import homework.books.model.Book;
 
 public class BookStorage {
     private Book[] array = new Book[10];
@@ -19,9 +20,9 @@ public class BookStorage {
         }
     }
 
-    public void printBooksByAuthorName(String authorName) {
+    public void printBooksByAuthorName(Author author) {
         for (int i = 0; i < size; i++) {
-            if (array[i].getAuthorName().equals(authorName)){
+            if (array[i].getAuthorName().equals(author)){
                 System.out.println(array[i]);
             }
 
@@ -48,10 +49,6 @@ public class BookStorage {
         for (int i = 0; i < size ; i++) {
             if (array[i].getPrice() > lowPrice && array[i].getPrice()<highPrice){
                 System.out.println(array[i]);
-            }
-            else {
-                System.out.println("there are no books in that price range");
-                break;
             }
         }
 

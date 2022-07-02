@@ -1,4 +1,4 @@
-package homework;
+package homework.brace;
 
 public class DinamicArray {
     private int[] array = new int[8];

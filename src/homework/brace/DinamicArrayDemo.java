@@ -1,4 +1,4 @@
-package homework;
+package homework.brace;
 
 public class DinamicArrayDemo {
     public static void main(String[] args) {
