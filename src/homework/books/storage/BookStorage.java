@@ -20,7 +20,7 @@ public class BookStorage {
         }
     }
 
-    public void printBooksByAuthorName(Author author) {
+    public void printBooksByAuthorIndex(int author) {
         for (int i = 0; i < size; i++) {
             if (array[i].getAuthorName().equals(author)){
                 System.out.println(array[i]);

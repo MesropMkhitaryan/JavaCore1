@@ -1,6 +1,7 @@
 package homework.books;
 
 import homework.books.command.Commands;
+import homework.books.exception.AuthorNotFoundException;
 import homework.books.model.Author;
 import homework.books.model.Book;
 import homework.books.storage.AuthorStorage;
@@ -17,7 +18,16 @@ public class BookDemo implements Commands {
         boolean run = true;
         while (run) {
             Commands.printComands();
-            int command = Integer.parseInt(scanner.nextLine());
+            int command = 0;
+            try {
+                command = Integer.parseInt(scanner.nextLine());
+            }
+            catch (NumberFormatException e){
+                System.out.println("please input correct command index");
+                Commands.printComands();
+                command = Integer.parseInt(scanner.nextLine());
+            }
+
             switch (command) {
                 case EXIT:
                     run = false;
@@ -34,13 +44,7 @@ public class BookDemo implements Commands {
                     bookStorage.printBooksByBookGenre(bookGenre);
                     break;
                 case PRINT_BOOKS_BY_PRICE_RANGE:
-                    System.out.println("please input lowest price range");
-                    String lowPriceStr = scanner.nextLine();
-                    double lowPrice = Double.parseDouble(lowPriceStr);
-                    System.out.println("please input highest price range");
-                    String highPriceStr = scanner.nextLine();
-                    double highPrice = Double.parseDouble(highPriceStr);
-                    bookStorage.printBooksByPriceRange(lowPrice, highPrice);
+                    printByPriceRange();
                     break;
                 case ADD_AUTHOR:
                     addAuthor();
@@ -48,10 +52,63 @@ public class BookDemo implements Commands {
                 case PRINT_AUTHORS:
                     authorStorage.printArray();
                     break;
+                case GET_AUTHOR_BY_INDEX:
+                    getAuthorByIndex();
+                    break;
                 default:
                     System.out.println("invalid number");
 
             }
+        }
+    }
+
+    private static void printByPriceRange() {
+        double lowPrice =0;
+
+        try {
+            lowPrice = getLowPrice(lowPrice);
+        }
+        catch (NumberFormatException e){
+            System.out.println("please input numbers only");
+            getLowPrice(lowPrice);
+        }
+        double highPrice = 0;
+       try {
+           highPrice = getHighPrice(highPrice);
+       }
+       catch (NumberFormatException e){
+           System.out.println("please input numbers only");
+           getHighPrice(highPrice);
+       }
+
+        bookStorage.printBooksByPriceRange(lowPrice, highPrice);
+    }
+
+    private static double getHighPrice(double highPrice) {
+        System.out.println("please input highest price range");
+        String highPriceStr = scanner.nextLine();
+        highPrice = Double.parseDouble(highPriceStr);
+        return highPrice;
+    }
+
+    private static double getLowPrice(double lowPrice) {
+        System.out.println("please input lowest price range");
+        String lowPriceStr = scanner.nextLine();
+        lowPrice = Double.parseDouble(lowPriceStr);
+        return lowPrice;
+    }
+
+    private static void getAuthorByIndex() {
+        authorStorage.printArray();
+        System.out.println("please input author index");
+        int autInd = Integer.parseInt(scanner.nextLine());
+
+        try {
+            System.out.println(authorStorage.getAuthorByIndex(autInd));
+        }
+        catch (AuthorNotFoundException e){
+            System.out.println("invalid index");
+            getAuthorByIndex();
         }
     }
 
@@ -96,19 +153,24 @@ public class BookDemo implements Commands {
 
             System.out.println("Please input book title");
             String title = scanner.nextLine();
-
-            System.out.println("Please input book price");
-            String priceStr = scanner.nextLine();
-            System.out.println("please input book count");
-            String countStr = scanner.nextLine();
+            double price = 0;
+            try {
+                price = getPrice(price);
+            }
+            catch (NumberFormatException e){
+                System.out.println("please input numbers only");
+                getPrice(price);
+            }
+            int count = 0;
+            try {
+                count = getCount(count);
+            }
+            catch (NumberFormatException e){
+                System.out.println("please input numbers only");
+                getCount(count);
+            }
             System.out.println("please input book genre");
             String genre = scanner.nextLine();
-
-
-            double price = Double.parseDouble(priceStr);
-            int count = Integer.parseInt(countStr);
-
-
             Book book = new Book(title, author, price, count, genre);
             bookStorage.add(book);
             System.out.println("thank you, book added");
@@ -116,5 +178,19 @@ public class BookDemo implements Commands {
 
 
 
+    }
+
+    private static int getCount(int count) {
+        System.out.println("please input book count");
+        String countStr = scanner.nextLine();
+        count = Integer.parseInt(countStr);
+        return count;
+    }
+
+    private static double getPrice(double price) {
+        System.out.println("Please input book price");
+        String priceStr = scanner.nextLine();
+        price = Double.parseDouble(priceStr);
+        return price;
     }
 }

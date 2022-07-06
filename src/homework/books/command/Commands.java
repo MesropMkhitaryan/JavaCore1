@@ -8,6 +8,7 @@ public interface Commands {
     int PRINT_BOOKS_BY_PRICE_RANGE = 4;
     int ADD_AUTHOR = 5;
     int PRINT_AUTHORS = 6;
+    int GET_AUTHOR_BY_INDEX =7;
 
     public static void printComands(){
         System.out.println("input " + EXIT + " for exit");
@@ -17,6 +18,7 @@ public interface Commands {
         System.out.println("input " + PRINT_BOOKS_BY_PRICE_RANGE + " to print books by price range");
         System.out.println("input " + ADD_AUTHOR  + " to add author");
         System.out.println("input " + PRINT_AUTHORS  + " to print authors");
+        System.out.println("input " + GET_AUTHOR_BY_INDEX  + " to print by author index");
     }
 
 }
