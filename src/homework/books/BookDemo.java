@@ -16,6 +16,19 @@ public class BookDemo implements Commands {
 
     public static void main(String[] args) {
         boolean run = true;
+        System.out.println("input login ");
+        String log = scanner.nextLine();
+
+        System.out.println("password");
+        String pas = scanner.nextLine();
+        if (log.equals("admin") && pas.equals("123456")){
+            run = true;
+        }
+        else {
+            System.out.println("incorrect login or password");
+            run =false;
+        }
+
         while (run) {
             Commands.printComands();
             int command = 0;
