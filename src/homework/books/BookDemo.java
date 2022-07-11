@@ -1,11 +1,15 @@
 package homework.books;
 
 import homework.books.command.Commands;
+import homework.books.enums.Gender;
+import homework.books.enums.Role;
 import homework.books.exception.AuthorNotFoundException;
 import homework.books.model.Author;
 import homework.books.model.Book;
+import homework.books.model.User;
 import homework.books.storage.AuthorStorage;
 import homework.books.storage.BookStorage;
+import homework.books.storage.UserStorage;
 
 import java.util.Scanner;
 
@@ -13,21 +17,94 @@ public class BookDemo implements Commands {
     private static Scanner scanner = new Scanner(System.in);
     private static BookStorage bookStorage = new BookStorage();
     private static AuthorStorage authorStorage = new AuthorStorage();
+    private static UserStorage userStorage = new UserStorage();
 
     public static void main(String[] args) {
-        boolean run = true;
-        System.out.println("input login ");
-        String log = scanner.nextLine();
 
-        System.out.println("password");
-        String pas = scanner.nextLine();
-        if (log.equals("admin") && pas.equals("123456")){
-            run = true;
+        userStorage.add(new User("admin","admin","admin@mail.com","admin", Role.ADMIN));
+        boolean run = true;
+        while (run){
+            Commands.printLoginCommands();
+
+            int command = 0;
+            try {
+                command = Integer.parseInt(scanner.nextLine());
+            }
+            catch (NumberFormatException e){
+                command = -1;
+            }
+            switch (command){
+                case 0:
+                    run =false;
+                    break;
+                case 1:
+                    login();
+                    break;
+                case 2:
+                    register();
+                    break;
+                default:
+                    System.out.println("invalid number");
+
+            }
+        }
+
+    }
+
+    private static void login() {
+        System.out.println("please input email,password");
+        String emailPasswordStr = scanner.nextLine();
+        String[] emailPassword = emailPasswordStr.split(",");
+        User user = userStorage.getUsersByEmail(emailPassword[0]);
+        if (user == null){
+            System.out.println("user does not exist!");
+        }else {
+            if (!user.getPassword().equals(emailPassword[1])) {
+                System.out.println("password is wrong!");
+            }
+            else {
+                if (user.getRole() == Role.ADMIN){
+                     loginAdmin();
+                }
+                else if (user.getRole() == Role.USER){
+                    userLogin();
+                }
+            }
+        }
+
+
+    }
+
+
+
+    private static void register() {
+        System.out.println("please input name,surname,email,password");
+        String userDataStr = scanner.nextLine();
+        String[] userData = userDataStr.split(",");
+        if (userData.length < 4){
+            System.out.println("please input correct user data");
         }
         else {
-            System.out.println("incorrect login or password");
-            run =false;
+            if (userStorage.getUsersByEmail(userData[2]) == null) {
+                User user = new User();
+                user.setName(userData[0]);
+                user.setSurname(userData[1]);
+                user.setEmail(userData[2]);
+                user.setPassword(userData[3]);
+                user.setRole(Role.USER);
+                userStorage.add(user);
+                System.out.println("user registered");
+            }
+            else {
+                System.out.println("user with " + userData[2] + " already exist");
+            }
         }
+
+    }
+
+    private static void loginAdmin() {
+        boolean run = true;
+
 
         while (run) {
             Commands.printComands();
@@ -42,7 +119,7 @@ public class BookDemo implements Commands {
             }
 
             switch (command) {
-                case EXIT:
+                case LOGOUT:
                     run = false;
                     break;
                 case ADD_BOOK:
@@ -73,6 +150,53 @@ public class BookDemo implements Commands {
 
             }
         }
+    }
+    private static void userLogin() {
+        boolean run = true;
+
+
+        while (run) {
+            Commands.printUserComands();
+            int command = 0;
+            try {
+                command = Integer.parseInt(scanner.nextLine());
+            }
+            catch (NumberFormatException e){
+                System.out.println("please input correct command index");
+                Commands.printComands();
+                command = Integer.parseInt(scanner.nextLine());
+            }
+
+            switch (command) {
+                case EXIT:
+                    run = false;
+                    break;
+                case ADD_BOOK:
+                    addBook();
+                    break;
+                case PRINT_ALL_BOOKS:
+                    bookStorage.printArray();
+                    break;
+                case PRINT_BOOKS_BY_GENRE:
+                    System.out.println("please input book genre");
+                    String bookGenre = scanner.nextLine();
+                    bookStorage.printBooksByBookGenre(bookGenre);
+                    break;
+                case PRINT_BOOKS_BY_PRICE_RANGE:
+                    printByPriceRange();
+                    break;
+                case PRINT_AUTHORS:
+                    authorStorage.printArray();
+                    break;
+                case GET_AUTHOR_BY_INDEX:
+                    getAuthorByIndex();
+                    break;
+                default:
+                    System.out.println("invalid number");
+
+            }
+        }
+
     }
 
     private static void printByPriceRange() {
@@ -125,7 +249,7 @@ public class BookDemo implements Commands {
         }
     }
 
-    private static void addAuthor() {
+    private static Gender addAuthor() {
 
         System.out.println("please input author name");
         String name = scanner.nextLine();
@@ -133,21 +257,36 @@ public class BookDemo implements Commands {
         String surname = scanner.nextLine();
         System.out.println("please input author email");
         String email = scanner.nextLine();
-        System.out.println("please input author gender");
-        String gender = scanner.nextLine();
-        if (gender.equals("male") || gender.equals("female")){
-            Author author = new Author(name,surname,email,gender);
-            authorStorage.add(author);
-        }
-        else {
+        System.out.println("please choose author gender");
+        try {
+            System.out.println("MALE  FEMALE");
+            Gender gender = Gender.valueOf(scanner.nextLine());
+            if (gender.equals(Gender.MALE) || gender.equals(Gender.FEMALE)){
+                Author author = new Author(name,surname,email,gender);
+                authorStorage.add(author);
+            }
+            else {
+                System.out.println("there is no such a gender please try again");
+                addAuthor();
+            }
+        }catch (IllegalArgumentException e) {
             System.out.println("there is no such a gender please try again");
             addAuthor();
         }
-
-
-
-
+        return null;
     }
+
+
+
+
+
+
+
+
+
+
+
+
 
     private static void addBook() {
         if (authorStorage.getSize() == 0){
