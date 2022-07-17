@@ -8,7 +8,7 @@ public class FileUtil {
     private static Scanner scanner = new Scanner(System.in);
 
     public static void main(String[] args) throws IOException {
-
+        contentSearch();
     }
 
     //այս մեթոդը պետք է սքաններով վերցնի երկու string.
@@ -53,9 +53,13 @@ public class FileUtil {
             File[] files = file.listFiles();
             for (File file1 : files) {
                 if (file1.isFile() && file1.canRead()){
-                    BufferedReader out = new BufferedReader(new FileReader (file1.getAbsoluteFile()));
-                    if (out.readLine().equals(keyword)){
-                        System.out.println(file1.getName());
+                   BufferedReader out = new BufferedReader(new FileReader (file1.getAbsoluteFile()));
+                    String line = "";
+
+                    while ((line = out.readLine()) != null) {
+                        if (line.contains(keyword)) {
+                            System.out.println(file1.getName());
+                        }
                     }
                 }
             }
@@ -79,9 +83,10 @@ public class FileUtil {
         if (file.isFile() && txtPath.endsWith(".txt")){
             try (BufferedReader out = new BufferedReader(new FileReader (txtPath));) {
                 String line = "";
-                while ((line = out.readLine()) != null)
-                if (line.contains(keyword)){
-                    System.out.println(line);
+                while ((line = out.readLine()) != null) {
+                    if (line.contains(keyword)) {
+                        System.out.println(line);
+                    }
                 }
             }
 
